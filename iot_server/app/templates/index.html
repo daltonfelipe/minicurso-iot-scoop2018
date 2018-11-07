@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Servidor Flask</title>
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <script src="static/js/jquery.js" charset="utf-8"></script>
+    <script src="static/js/bootstrap.min.js" charset="utf-8"></script>
+  </head>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">Minicurso IoT</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link d-none" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item d-none">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item d-none">
+          <a class="nav-link disabled" href="#">Disabled</a>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Logout</button>
+      </form>
+    </div>
+  </nav>
+  <body>
+    <main>
+      <div class="jumbotron jumbotron-fluid px-4">
+        <h1 class="display-4">Minicurso Scoop 2018</h1>
+      </div>
+      <div class="container">
+        <div class="col-3 mx-auto text-center">
+          <p class="lead">Status: <span class="lead" id="status">Off</span> </p> 
+          
+          <img src="static/img/off.png" id="lampada" alt="">
+          <div class="btn-group">
+            <button type="button" id="on" class="btn btn-lg btn-outline-success" name="button">On</button>
+            <button type="button" id="off" class="btn btn-lg btn-outline-danger" name="button">Off</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+  
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+  <script type="text/javascript">
+    
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    
+    var img = $("#lampada");
+    var on = $("#on");
+    var off = $("#off");
+   
+
+    on.on("click", function(){
+      img.attr('src', 'static/img/on.png');
+      socket.emit('acao', 'on');
+    });
+
+    off.on("click", function(){
+      img.attr('src', 'static/img/off.png'); 
+      socket.emit('acao', 'off');
+    });
+
+    socket.on('status', function(status){
+      console.log(status);
+      $("#status").text(status);
+    });
+
+
+  </script>
+</html>
